@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.activityActivity"></activity>
+        <activity android:name=".FunctionActivity"></activity>
 
 
         <service
