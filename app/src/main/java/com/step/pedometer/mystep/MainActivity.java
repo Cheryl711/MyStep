@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity  implements Handler.Callback
                 Log.d(TAG, "onClick: button1");
 
                 Intent intent =new Intent(MainActivity.this, activityActivity.class);
+                startActivity(intent );
             }
         });
     }
