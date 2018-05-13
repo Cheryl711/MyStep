@@ -4,17 +4,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,6 +31,7 @@ public class MainActivity extends AppCompatActivity  implements Handler.Callback
     private long TIME_INTERVAL = 500;
     //控件
     private TextView text_step;    //显示走的步数
+    private TextView text_calories;
 
     private Messenger messenger;
     private Messenger mGetReplyMessenger = new Messenger(new Handler(this));
@@ -62,6 +61,7 @@ public class MainActivity extends AppCompatActivity  implements Handler.Callback
             case Constant.MSG_FROM_SERVER:
                 //更新步数
                 text_step.setText(msg.getData().getInt("step") + "");
+                text_calories.setText(msg.getData().getInt("step")/43 + "");
                 delayHandler.sendEmptyMessageDelayed(Constant.REQUEST_SERVER, TIME_INTERVAL);
                 break;
             case Constant.REQUEST_SERVER:
@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity  implements Handler.Callback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         text_step = (TextView) findViewById(R.id.main_text_step);
+        text_calories = (TextView) findViewById( R.id.main_text_calories );
         delayHandler = new Handler(this);
 
 

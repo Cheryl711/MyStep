@@ -105,7 +105,7 @@ public class StepService extends Service implements SensorEventListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
         initTodayData();
-        updateNotification("今日步数:"+StepDetector.CURRENT_STEP+" 步");
+        updateNotification("Steps today:"+StepDetector.CURRENT_STEP+" steps");
         return START_STICKY;
     }
     /**
