@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "464135463283",
+    "firebase_url": "https://fitnessapplication-a69cb.firebaseio.com",
+    "project_id": "fitnessapplication-a69cb",
+    "storage_bucket": "fitnessapplication-a69cb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464135463283:android:b7392c3a794d14e7",
+        "android_client_info": {
+          "package_name": "com.step.pedometer.mystep"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "464135463283-d6up8lk5921v7fecpbrn38pvibc9ni1g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.step.pedometer.mystep",
+            "certificate_hash": "9df2a819b3012a7e4aa8222060e0a0732de10a62"
+          }
+        },
+        {
+          "client_id": "464135463283-bvo8jhf2ummml0frrn91fpmadl0bsnpc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCb-dkqxiR8LE_ff1s0UrWSVEBtgH9u07c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "464135463283-bvo8jhf2ummml0frrn91fpmadl0bsnpc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
