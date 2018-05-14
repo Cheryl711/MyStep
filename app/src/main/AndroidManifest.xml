@@ -25,6 +25,8 @@
         </activity>
         <activity android:name=".activity.activityActivity"></activity>
         <activity android:name=".FunctionActivity"></activity>
+        <activity android:name=".login.LoginActivity"></activity>
+        <activity android:name=".login.RegisterActivity"></activity>
 
 
         <service

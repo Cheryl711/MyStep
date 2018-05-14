@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.step.pedometer.mystep.activity.activityActivity;
 import com.step.pedometer.mystep.config.Constant;
+import com.step.pedometer.mystep.login.LoginActivity;
 import com.step.pedometer.mystep.service.StepService;
 
 public class MainActivity extends AppCompatActivity  implements Handler.Callback {
@@ -94,6 +95,17 @@ public class MainActivity extends AppCompatActivity  implements Handler.Callback
                 Log.d(TAG, "onClick: button1");
 
                 Intent intent =new Intent(MainActivity.this, activityActivity.class);
+                startActivity(intent);
+            }
+
+        });
+        ImageView view2 = (ImageView) findViewById(R.id.profileMenu);
+        view2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating to login screen");
+
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
