@@ -22,9 +22,6 @@ public class activityActivity extends AppCompatActivity {
 
     private Context mContext = activityActivity.this;
 
-    //firebase
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
 
     public void mainStart(View view) {
         Intent intent = new Intent(this, FunctionActivity.class);
@@ -59,63 +56,7 @@ public class activityActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-     /*
-    -----------Firebase-----------------
-     */
 
-    //checks to see if the @param 'user' is logged in
-    private void checkCurrentUser (FirebaseUser user){
-        Log.d(TAG, "checkCurrentUser: checking if user is logged in.");
-
-        if (user == null){
-            Intent intent = new Intent (mContext, LoginActivity.class);
-            startActivity(intent);
-        }
-    }
-
-    //set up the firebase auth object
-    private void setupFirebaseAuth(){
-        Log.d(TAG, "setupFirebaseAuth: setting up firebase auth");
-
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                // check if the user is logged in
-                checkCurrentUser(user);
-
-                if (user != null){
-                    // user is signed in
-                    Log.d(TAG, "onAuthStateChanged: sined_in: " + user.getUid());
-                } else {
-                    // user is signed out
-                    Log.d(TAG, "onAuthStateChanged: signed_out");
-                }
-            }
-        };
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        mAuth.addAuthStateListener(mAuthListener);
-        checkCurrentUser(mAuth.getCurrentUser());
-    }
-
-    public void onStop(){
-        super.onStop();
-        if(mAuthListener != null){
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
-    /*
-    -----------Firebase-----------------
-     */
 
 
     private class FloatingActionButton {

@@ -16,7 +16,7 @@
             android:layout_height="100dp"
             android:src="@drawable/fitness"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="25dp"
+            android:layout_marginBottom="10dp"
             />
 
         <TextView
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:text="iRun Login"
             android:layout_gravity="center_horizontal"
-            android:textSize="35sp"
+            android:textSize="25sp"
             android:textColor="@color/colorBlack"/>
 
         <android.support.design.widget.TextInputLayout
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="20dp"
             android:text="Login"
             android:id="@+id/btn_login"
             android:padding="12dp"
@@ -77,8 +77,8 @@
     </LinearLayout>
 
     <ProgressBar
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:id="@+id/prograssBar"
         android:layout_centerInParent="true"
         android:paddingBottom="20dp"/>

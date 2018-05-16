@@ -10,12 +10,15 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.step.pedometer.mystep.activity.activityActivity;
 import com.step.pedometer.mystep.config.Constant;
 import com.step.pedometer.mystep.login.LoginActivity;
@@ -24,8 +27,12 @@ import com.step.pedometer.mystep.service.StepService;
 public class MainActivity extends AppCompatActivity  implements Handler.Callback {
 
 
-    private static final String TAG = "ActivityActivity";
+    private static final String TAG = "MainActivity";
     private Context mContext = MainActivity.this;
+
+   // firebase
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
 
     //循环取当前时刻的步数中间的时间间隔
@@ -89,6 +96,7 @@ public class MainActivity extends AppCompatActivity  implements Handler.Callback
 
 
         ImageView view1=(ImageView) findViewById(R.id.activitybutton);
+
         view1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,9 +105,10 @@ public class MainActivity extends AppCompatActivity  implements Handler.Callback
                 Intent intent =new Intent(MainActivity.this, activityActivity.class);
                 startActivity(intent);
             }
-
         });
+
         ImageView view2 = (ImageView) findViewById(R.id.profileMenu);
+
         view2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,6 +147,64 @@ public class MainActivity extends AppCompatActivity  implements Handler.Callback
         super.onDestroy();
     }
 
+//     /*
+//    -----------Firebase-----------------
+//     */
+//
+//    //checks to see if the @param 'user' is logged in
+//    private void checkCurrentUser (FirebaseUser user){
+//        Log.d(TAG, "checkCurrentUser: checking if user is logged in.");
+//
+//        if (user == null){
+//            Intent intent = new Intent (mContext, LoginActivity.class);
+//            startActivity(intent);
+//        }
+//    }
+//
+//    //set up the firebase auth object
+//    private void setupFirebaseAuth(){
+//        Log.d(TAG, "setupFirebaseAuth: setting up firebase auth");
+//
+//        mAuth = FirebaseAuth.getInstance();
+//
+//        mAuthListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                FirebaseUser user = firebaseAuth.getCurrentUser();
+//
+//                // check if the user is logged in
+//                checkCurrentUser(user);
+//
+//                if (user != null){
+//                    // user is signed in
+//                    Log.d(TAG, "onAuthStateChanged: sined_in: " + user.getUid());
+//                } else {
+//                    // user is signed out
+//                    Log.d(TAG, "onAuthStateChanged: signed_out");
+//                }
+//            }
+//        };
+//    }
+//
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        // Check if user is signed in (non-null) and update UI accordingly.
+//        mAuth.addAuthStateListener(mAuthListener);
+//        checkCurrentUser(mAuth.getCurrentUser());
+//        setupService();
+//    }
+
+//    public void onStop(){
+//        super.onStop();
+//        if(mAuthListener != null){
+//            mAuth.removeAuthStateListener(mAuthListener);
+//        }
+//    }
+
+    /*
+    -----------Firebase-----------------
+     */
 
 
 }
