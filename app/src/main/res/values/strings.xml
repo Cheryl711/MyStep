@@ -6,6 +6,7 @@
     <string name="version">Version</string>
     <string name="push_notification">Push Notification</string>
     <string name="sign_out">Sign Out</string>
+    <string name="con">Confirm</string>
 
     <!---Firebase messages-->
     <string name="auth_failed">Failed to Authenticate</string>
