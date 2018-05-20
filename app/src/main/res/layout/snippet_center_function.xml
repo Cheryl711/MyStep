@@ -19,14 +19,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Timing"/>
+            android:text="Time"
+            android:textSize="25dp"/>
 
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:textSize="25dp"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -38,21 +40,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="StepCount"/>
+            android:text="StepCount"
+            android:textSize="25dp"/>
 
         <TextView
             android:id="@+id/step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:textSize="25dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:text="steps"/>
+            android:text="steps"
+            android:textSize="20dp"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -64,21 +69,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Speed"/>
+            android:text="Speed"
+            android:textSize="25dp"/>
 
         <TextView
             android:id="@+id/speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:textSize="25dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:text="meterPerSecond"/>
+            android:text="meterPerSecond"
+            android:textSize="20dp"/>
     </RelativeLayout>
 
     <LinearLayout
