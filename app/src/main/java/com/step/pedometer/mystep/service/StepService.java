@@ -297,7 +297,7 @@ public class StepService extends Service implements SensorEventListener {
         stepDetector.setOnSensorChangeListener(new StepDetector.OnSensorChangeListener() {
             @Override
             public void onChange() {
-                updateNotification("今日步数:"+StepDetector.CURRENT_STEP+" 步");
+                updateNotification("Steps today:"+StepDetector.CURRENT_STEP+" steps");
             }
         });
     }
@@ -332,7 +332,7 @@ public class StepService extends Service implements SensorEventListener {
             StepDetector.CURRENT_STEP++;
         }
         //更新状态栏信息
-        updateNotification("今日步数：" + StepDetector.CURRENT_STEP + " 步");
+        updateNotification("Steps today：" + StepDetector.CURRENT_STEP + " steps");
     }
 
     @Override

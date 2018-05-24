@@ -12,7 +12,7 @@
         android:layout_marginLeft="50dp"
         android:layout_centerVertical="true"
         android:id="@+id/activitybutton"
-        android:src="@drawable/ic_profile"/>
+        android:src="@drawable/ic_sport"/>
 
     <ImageView
         android:layout_width="30dp"
@@ -20,7 +20,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:id="@+id/explorebutton"
-        android:src="@drawable/ic_profile"/>
+        android:src="@drawable/ic_sleep"/>
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
