@@ -90,7 +90,9 @@ public class LoginActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
                                         Log.d(TAG, "signInWithEmail:success");
+                                        Toast.makeText(LoginActivity.this, "Welcome back!", Toast.LENGTH_LONG).show();
 
+                                        //if the user is logged in, then navigae to meActivity and call 'finish()'
                                         mProgressBar.setVisibility(View.GONE);
                                         mPleaseWait.setVisibility(View.GONE);
                                     } else {
