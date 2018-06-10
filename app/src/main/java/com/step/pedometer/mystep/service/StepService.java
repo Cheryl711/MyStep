@@ -37,33 +37,30 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * 计步服务
- * Created by lenovo on 2017/1/17.
- */
+
 @TargetApi(Build.VERSION_CODES.CUPCAKE)
 public class StepService extends Service implements SensorEventListener {
     private final String TAG="TAG_StepService";   //"StepService";
-    //默认为30秒进行一次存储
+    //Default is 30 seconds for storage
     private static int duration=30000;
-    private static String CURRENTDATE="";   //当前的日期
-    private SensorManager sensorManager;    //传感器管理者
+    private static String CURRENTDATE="";   //Current date
+    private SensorManager sensorManager;    //Sensor Manager
     private StepDetector stepDetector;
     private NotificationManager nm;
     private NotificationCompat.Builder builder;
     private Messenger messenger=new Messenger(new MessengerHandler());
-    //广播
+    //broadcast
     private BroadcastReceiver mBatInfoReceiver;
     private PowerManager.WakeLock mWakeLock;
     private TimeCount time;
 
-    //计步传感器类型 0-counter 1-detector 2-加速度传感器
+    //Step sensor type 0-counter 1-detector 2-accelerometer
     private static int stepSensor = -1;
     private List<StepData> mStepData;
 
-    //用于计步传感器
-    private int previousStep;    //用于记录之前的步数
-    private boolean isNewDay=false;    //用于判断是否是新的一天，如果是新的一天则将之前的步数赋值给previousStep
+    //For step sensors
+    private int previousStep;    //Used to record the number of steps
+    private boolean isNewDay=false;    //Used to determine if it is a new day. If it is a new day, assign the previous step to the previousStep.
 
     private static class MessengerHandler extends Handler {
         @Override
@@ -74,10 +71,10 @@ public class StepService extends Service implements SensorEventListener {
                         Messenger messenger=msg.replyTo;
                         Message replyMsg=Message.obtain(null,Constant.MSG_FROM_SERVER);
                         Bundle bundle=new Bundle();
-                        //将现在的步数以消息的形式进行发送
+                        //Send the current number of steps as a message
                         bundle.putInt("step",StepDetector.CURRENT_STEP);
                         replyMsg.setData(bundle);
-                        messenger.send(replyMsg);  //发送要返回的消息
+                        messenger.send(replyMsg);  //Send message to return
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
@@ -91,12 +88,12 @@ public class StepService extends Service implements SensorEventListener {
     @Override
     public void onCreate(){
         super.onCreate();
-        //初始化广播
+        //Initialize the broadcast
         initBroadcastReceiver();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //启动步数监测器
+                //Start Step Monitor
                 startStepDetector();
             }
         }).start();
@@ -109,7 +106,7 @@ public class StepService extends Service implements SensorEventListener {
         return START_STICKY;
     }
     /**
-     * 获得今天的日期
+     * Get today's date
      */
     private String getTodayDate(){
         Date date=new Date(System.currentTimeMillis());
@@ -118,47 +115,47 @@ public class StepService extends Service implements SensorEventListener {
     }
 
     /**
-     * 初始化当天的日期
+     * Date of the day of initialization
      */
     private void initTodayData(){
         CURRENTDATE=getTodayDate();
-        //在创建方法中有判断，如果数据库已经创建了不会二次创建的
+        //There is a judgment in the creation method, if the database has been created will not be created twice
         DbUtils.createDb(this,Constant.DB_NAME);
 
-        //获取当天的数据
+        //Get the date of the day
         List<StepData> list=DbUtils.getQueryByWhere(StepData.class,"today",new String[]{CURRENTDATE});
         if(list.size()==0||list.isEmpty()){
-            //如果获取当天数据为空，则步数为0
+            //If you get the data of the day is empty, the number of steps is 0
             StepDetector.CURRENT_STEP=0;
-            isNewDay=true;  //用于判断是否存储之前的数据，后面会用到
+            isNewDay=true;  //Used to determine whether to store previous data, later used
         }else if(list.size()==1){
             isNewDay=false;
-            //如果数据库中存在当天的数据那么获取数据库中的步数
+            //Get the number of steps in the database if there is data for the current day in the database
             StepDetector.CURRENT_STEP=Integer.parseInt(list.get(0).getStep());
         }else{
-            Log.e(TAG, "出错了！");
+            Log.e(TAG, "Error！");
         }
     }
 
     /**
-     * 初始化广播
+     * Initialize the broadcast
      */
     private void initBroadcastReceiver(){
-        //定义意图过滤器
+        //Defining intent filters
         final IntentFilter filter=new IntentFilter();
-        //屏幕灭屏广播
+        //Screen off screen broadcast
         filter.addAction(Intent.ACTION_SCREEN_OFF);
-        //日期修改
+        //Date modification
         filter.addAction(Intent.ACTION_TIME_CHANGED);
-        //关闭广播
+        //Turn off the broadcast
         filter.addAction(Intent.ACTION_SHUTDOWN);
-        //屏幕高亮广播
+        //Screen highlight broadcast
         filter.addAction(Intent.ACTION_SCREEN_ON);
-        //屏幕解锁广播
+        //Screen unlock broadcast
         filter.addAction(Intent.ACTION_USER_PRESENT);
-        //当长按电源键弹出“关机”对话或者锁屏时系统会发出这个广播
-        //example：有时候会用到系统对话框，权限可能很高，会覆盖在锁屏界面或者“关机”对话框之上，
-        //所以监听这个广播，当收到时就隐藏自己的对话，如点击pad右下角部分弹出的对话框
+        //When the long press the power button to pop up the "shutdown" dialog or lock screen, the system will send this broadcast
+        //example：Occasionally, system dialogs are used. Permissions can be very high and can be overridden on the lock screen or the "shutdown" dialog box.
+        //So listen to this broadcast and hide your own dialogue when you receive it. For example, click on the pop-up dialog in the bottom right corner of the pad.
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
 
         mBatInfoReceiver=new BroadcastReceiver() {
@@ -171,16 +168,16 @@ public class StepService extends Service implements SensorEventListener {
                 }else if(Intent.ACTION_SCREEN_OFF.equals(action)){
                     Log.v(TAG,"screen off");
                     save();
-                    //改为60秒一存储
+                    //Changed to 60 seconds for storage
                     duration=60000;
                 }else if(Intent.ACTION_USER_PRESENT.equals(action)){
                     Log.v(TAG,"screen unlock");
                     save();
-                    //改为30秒一存储
+                    //Changed to 30 seconds for storage
                     duration=30000;
                 }else if(Intent.ACTION_CLOSE_SYSTEM_DIALOGS.equals(intent.getAction())){
-                    Log.v(TAG,"receive Intent.ACTION_CLOSE_SYSTEM_DIALOGS  出现系统对话框");
-                    //保存一次
+                    Log.v(TAG,"receive Intent.ACTION_CLOSE_SYSTEM_DIALOGS  System dialog box appears");
+                    //Save once
                     save();
                 }else if(Intent.ACTION_SHUTDOWN.equals(intent.getAction())){
                     Log.v(TAG,"receive ACTION_SHUTDOWN");
@@ -200,7 +197,6 @@ public class StepService extends Service implements SensorEventListener {
     }
 
     /**
-     * 更新通知(显示通知栏信息)
      * @param content
      */
     private void updateNotification(String content){
@@ -210,12 +206,12 @@ public class StepService extends Service implements SensorEventListener {
                 new Intent(this, MainActivity.class),0);
         builder.setContentIntent(contentIntent);
         builder.setSmallIcon(R.mipmap.ic_notification);
-        builder.setTicker("BasePedo");
-        builder.setContentTitle("BasePedo");
-        //设置不可清除
+        builder.setTicker("M Fit");
+        builder.setContentTitle("M Fit");
+        //Setting is not cleared
         builder.setOngoing(true);
         builder.setContentText(content);
-        Notification notification=builder.build(); //上面均为构造Notification的构造器中设置的属性
+        Notification notification=builder.build(); //The above are the properties set in the constructor of the Notification constructor
 
         startForeground(0,notification);
         nm=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
@@ -234,10 +230,10 @@ public class StepService extends Service implements SensorEventListener {
             sensorManager=null;
             stepDetector =null;
         }
-        //得到休眠锁，目的是为了当手机黑屏后仍然保持CPU运行，使得服务能持续运行
+        //Get sleep lock, the purpose is to keep the CPU running after the black screen, so that the service can continue to run
         getLock(this);
         sensorManager=(SensorManager)this.getSystemService(SENSOR_SERVICE);
-        //android4.4以后可以使用计步传感器
+        //Pedometer sensor can be used after android4.4
         int VERSION_CODES = Build.VERSION.SDK_INT;
         if(VERSION_CODES>=19){
             addCountStepListener();
@@ -246,31 +242,13 @@ public class StepService extends Service implements SensorEventListener {
         }
     }
 
-    /**
-     * 使用自带的计步传感器
-     *
-     * 说明：
-     *     开始使用这个传感器的时候很头疼，虽然它计步很准确，然而计步一开始就是5w多步，搞不懂它是怎么计算的，而且每天
-     * 都在增长，不会因为日期而清除。今天灵光一闪，我脑海中飘过一个想法，会不会手机上的计步传感器是以一个月为计算周期
-     * 呢？     于是乎，我打开神器QQ，上面有每天的步数，我把这个月的步数加到了一起在和手机上显示的步数进行对比，呵，
-     * 不比不知道，一比吓一跳哈。就差了几百步，我猜测误差是因为QQ定期去得到计步传感器的步数，而我的引用是实时获取。要不然
-     * 就是有点小误差。不过对于11W多步的数据几百步完全可以忽略。从中我可以得到下面两个信息：
-     * 1.手机自带计步传感器存储的步数信息是以一个月为周期进行清算
-     * 2.QQ计步使用的是手机自带的计步传感器   啊哈哈哈
-     *
-     *
-     * 后来当我要改的时候又发现问题了
-     * 我使用了StepDetector.CURRENT_STEP = (int)event.values[0];
-     * 所以它会返回这一个月的步数，当每次传感器发生改变时，我直接让CURRENT_STEP++；就可以从0开始自增了
-     * 不过上面的分析依然正确。不过当使用CURRENT_STEP++如果服务停掉计步就不准了。如果使用计步传感器中
-     * 统计的数据减去之前的数据就是当天的数据了，这样每天走多少步就能准确的显示出来
-     */
+
     private void addCountStepListener(){
         Sensor detectorSensor=sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         if(countSensor!=null){
             stepSensor = 0;
-            Log.v(TAG, "countSensor 步数传感器");
+            Log.v(TAG, "countSensor Step sensor");
             sensorManager.registerListener(StepService.this,countSensor,SensorManager.SENSOR_DELAY_UI);
         }else if(detectorSensor!=null){
             stepSensor = 1;
@@ -278,20 +256,20 @@ public class StepService extends Service implements SensorEventListener {
             sensorManager.registerListener(StepService.this,detectorSensor,SensorManager.SENSOR_DELAY_UI);
         }else{
             stepSensor = 2;
-            Log.e(TAG,"Count sensor not available! 没有可用的传感器，只能用加速传感器了");
+            Log.e(TAG,"Count sensor not available! No sensor available, only acceleration sensor");
             addBasePedoListener();
         }
     }
 
 
     /**
-     * 使用加速度传感器
+     * Use acceleration sensor
      */
     private void addBasePedoListener(){
-        //只有在使用加速传感器的时候才会调用StepDetector这个类
+        //The StepDetector class is only called when an acceleration sensor is used
         stepDetector =new StepDetector(this);
-        //获得传感器类型，这里获得的类型是加速度传感器
-        //此方法用来注册，只有注册过才会生效，参数：SensorEventListener的实例，Sensor的实例，更新速率
+        //Get the sensor type, the type obtained here is the accelerometer
+        //This method is used to register, only registered will take effect, parameters: SensorEventListener instance, Sensor instance, update rate
         Sensor sensor=sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(stepDetector,sensor,SensorManager.SENSOR_DELAY_UI);
         stepDetector.setOnSensorChangeListener(new StepDetector.OnSensorChangeListener() {
@@ -304,34 +282,34 @@ public class StepService extends Service implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if(stepSensor == 0){   //使用计步传感器
+        if(stepSensor == 0){   //Use pedometer sensor
             if(isNewDay) {
-                //用于判断是否为新的一天，如果是那么记录下计步传感器统计步数中的数据
-                // 今天走的步数=传感器当前统计的步数-之前统计的步数
-                previousStep = (int) event.values[0];    //得到传感器统计的步数
+                //Used to determine if it is a new day. If it is then record the data in the step count of the pedometer sensor
+                // The number of steps taken today = the number of steps the sensor is currently counting - the number of steps before the statistics
+                previousStep = (int) event.values[0];    //Get the number of steps counted by the sensor
                 isNewDay = false;
                 save();
-                //为防止在previousStep赋值之前数据库就进行了保存，我们将数据库中的信息更新一下
+                //To prevent the database from being saved before the previousStep assignment, we update the information in the database.
                 List<StepData> list=DbUtils.getQueryByWhere(StepData.class,"today",new String[]{CURRENTDATE});
-                //修改数据
+                //change the data
                 StepData data=list.get(0);
                 data.setPreviousStep(previousStep+"");
                 DbUtils.update(data);
             }else {
-                //取出之前的数据
+                //Remove the previous data
                 List<StepData> list = DbUtils.getQueryByWhere(StepData.class, "today", new String[]{CURRENTDATE});
                 StepData data=list.get(0);
                 this.previousStep = Integer.valueOf(data.getPreviousStep());
             }
             StepDetector.CURRENT_STEP=(int)event.values[0]-previousStep;
 
-            //或者只是使用下面一句话，不过程序关闭后可能无法计步。根据需求可自行选择。
-            //如果记录程序开启时走的步数可以使用这种方式——StepDetector.CURRENT_STEP++;
-            //StepDetector.CURRENT_STEP++;
+            //Or just use the following sentence, but the program may not be able to step after it is closed. According to demand can choose.
+            //If you record the number of steps taken when the program is started, you can use this method - StepDetector.CURRENT_STEP++;
+
         }else if(stepSensor == 1){
             StepDetector.CURRENT_STEP++;
         }
-        //更新状态栏信息
+        //Update status bar information
         updateNotification("Steps today：" + StepDetector.CURRENT_STEP + " steps");
     }
 
@@ -341,7 +319,7 @@ public class StepService extends Service implements SensorEventListener {
     }
 
     /**
-     * 保存数据
+     * save data
      */
     private void save(){
         int tempStep=StepDetector.CURRENT_STEP;
@@ -354,7 +332,7 @@ public class StepService extends Service implements SensorEventListener {
             data.setPreviousStep(previousStep+"");
             DbUtils.insert(data);
         }else if(list.size()==1){
-            //修改数据
+            //change the data
             StepData data=list.get(0);
             data.setStep(tempStep+"");
             DbUtils.update(data);
@@ -363,7 +341,7 @@ public class StepService extends Service implements SensorEventListener {
 
     @Override
     public void onDestroy(){
-        //取消前台进程
+        //Cancel the foreground process
         stopForeground(true);
         DbUtils.closeDb();
         unregisterReceiver(mBatInfoReceiver);
@@ -372,12 +350,12 @@ public class StepService extends Service implements SensorEventListener {
         super.onDestroy();
     }
 
-    //  同步方法   得到休眠锁
+    //  Synchronization method    Get sleep lock
     synchronized private PowerManager.WakeLock getLock(Context context){
         if(mWakeLock!=null){
             if(mWakeLock.isHeld()) {
                 mWakeLock.release();
-                Log.v(TAG,"释放锁");
+                Log.v(TAG,"Release lock");
             }
 
             mWakeLock=null;
@@ -396,7 +374,7 @@ public class StepService extends Service implements SensorEventListener {
                 mWakeLock.acquire(300000);
             }
         }
-        Log.v(TAG,"得到了锁");
+        Log.v(TAG,"Got the lock");
         return (mWakeLock);
     }
 
@@ -412,7 +390,7 @@ public class StepService extends Service implements SensorEventListener {
 
         @Override
         public void onFinish() {
-            //如果计时器正常结束，则开始计步
+            //If the timer ends normally, start step counting
             time.cancel();
             save();
             startTimeCount();

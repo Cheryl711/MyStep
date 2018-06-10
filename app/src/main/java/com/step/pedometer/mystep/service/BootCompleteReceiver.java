@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 
 /**
- * 开机完成广播
- * Created by lenovo on 2017/1/5.
+ * Boot up to complete the broadcast
+
  */
 
 public class BootCompleteReceiver extends BroadcastReceiver{
